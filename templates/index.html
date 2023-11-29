@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>Flask Calc</title>
+</head>
+<body>
+<h1>This is the Calc page</h1>
+
+ 
+<script type = "text/javascript" >
+const ajax = async (config) => {
+    const request = await fetch(config.url, {
+        method: config.method,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(config.payload)
+    });
+    response = await request.json();
+    return response
+}
+
+async function submitform() {
+    event.preventDefault();
+    left = document.querySelector("#formElem > input[type=text]:nth-child(1)").value;
+    sing = document.querySelector("#formElem > select").value;
+    right = document.querySelector("#formElem > input[type=text]:nth-child(3)").value;
+    
+    out = await ajax({
+    method: 'POST',
+    url: 'api/calculate',
+    payload: {"left": Number(left), "sign": sing, "right": Number(right) }
+})
+
+    document.querySelector("#formElem > input[type=text]:nth-child(4)").value = out['result'];
+}
+</script> 
+
+
+
+
+  <form action="#"  id="formElem" >
+    <input type="text" name="left">
+
+    <select name="sign">
+        <option value="add">+</option>
+        <option value="sub">-</option>
+        <option value="mul">*</option>
+        <option value="div">/</option>
+    <input type="text" name="right">
+     = <input type="text" name="result">
+    <input type="submit" value="Submit" onclick="submitform()">
+</form>
+</body>
+</html>
+
